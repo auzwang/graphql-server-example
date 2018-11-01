@@ -20,11 +20,13 @@ const projects = [
 
 const workflows = [
   {
+    id: 'w1',
     projectId: 'abc',
     triggerTypes: ['enter', 'exit'],
     actions: [{ name: 'do x' }],
   },
   {
+    id: 'w2',
     projectId: 'xyz',
   },
 ]
@@ -52,6 +54,7 @@ const typeDefs = gql`
   # (A "Mutation" type will be covered later on.)
   type Query {
     projects: [Project]
+    workflow(id: String): Workflow
   }
   
   type Project {
@@ -88,6 +91,9 @@ const resolvers = {
         workflows: () => workflows.filter(workflow => workflow.projectId === projectId),
       }
     }),
+    workflow: (parent, { id }) => {
+      return workflows.find(workflow => workflow.id === id)
+    },
   },
 
   Workflow: {
@@ -99,7 +105,7 @@ const resolvers = {
     },
     actions(workflow) {
       return workflow.actions
-    }
+    },
   },
 };
 
